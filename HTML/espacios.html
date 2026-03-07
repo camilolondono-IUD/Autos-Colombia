@@ -71,20 +71,139 @@
 
         </div>
 
-        <!-- FILTROS -->
+        <!-- GRID ESPACIOS -->
+        <div class="parking-container">
 
-        <div class="filters">
+            <!-- Filtros de zona -->
+            <div class="zone-filters">
+                <button class="filter active">Todas las Zonas</button>
+                <button class="filter">Zona A</button>
+                <button class="filter">Zona B</button>
+                <button class="filter">Zona C</button>
+            </div>
 
-            <button class="active" onclick="filtrar('todas')">Todas las Zonas</button>
-            <button onclick="filtrar('A')">Zona A</button>
-            <button onclick="filtrar('B')">Zona B</button>
-            <button onclick="filtrar('C')">Zona C</button>
+            <!-- Cuadrilla de espacios -->
+            <div class="parking-grid">
+
+                <!-- Disponible -->
+                <div class="parking-space disponible">
+                    <div class="icon">✔</div>
+                    <div class="space-id">A-10</div>
+                </div>
+
+                <!-- Disponible -->
+                <div class="parking-space disponible">
+                    <div class="icon">✔</div>
+                    <div class="space-id">A-11</div>
+                </div>
+
+                <!-- Mantenimiento -->
+                <div class="parking-space mantenimiento">
+                    <div class="icon">🔧</div>
+                    <div class="space-id">A-12</div>
+                </div>
+
+                <!-- Ocupado -->
+                <div class="parking-space ocupado">
+                    <div class="icon">🚗</div>
+                    <div class="space-id">A-13</div>
+                    <div class="plate">ABC-123</div>
+                </div>
+
+                <!-- Ocupado -->
+                <div class="parking-space ocupado">
+                    <div class="icon">🚗</div>
+                    <div class="space-id">A-14</div>
+                    <div class="plate">DEF-456</div>
+                </div>
+
+                <!-- Ocupado -->
+                <div class="parking-space ocupado">
+                    <div class="icon">🚗</div>
+                    <div class="space-id">A-15</div>
+                    <div class="plate">GHI-789</div>
+                </div>
+
+                <!-- Disponible -->
+                <div class="parking-space disponible">
+                    <div class="icon">✔</div>
+                    <div class="space-id">B-01</div>
+                </div>
+
+                <!-- Disponible -->
+                <div class="parking-space disponible">
+                    <div class="icon">✔</div>
+                    <div class="space-id">B-02</div>
+                </div>
+
+                <!-- Disponible -->
+                <div class="parking-space disponible">
+                    <div class="icon">✔</div>
+                    <div class="space-id">B-03</div>
+                </div>
+
+                <!-- Ocupado -->
+                <div class="parking-space ocupado">
+                    <div class="icon">🚗</div>
+                    <div class="space-id">B-04</div>
+                    <div class="plate">JKL-012</div>
+                </div>
+
+                <!-- Ocupado -->
+                <div class="parking-space ocupado">
+                    <div class="icon">🚗</div>
+                    <div class="space-id">B-05</div>
+                    <div class="plate">MNO-345</div>
+                </div>
+
+                <!-- Disponible -->
+                <div class="parking-space disponible">
+                    <div class="icon">✔</div>
+                    <div class="space-id">B-06</div>
+                </div>
+
+                <!-- Disponible -->
+                <div class="parking-space disponible">
+                    <div class="icon">✔</div>
+                    <div class="space-id">C-01</div>
+                </div>
+
+                <!-- Ocupado -->
+                <div class="parking-space ocupado">
+                    <div class="icon">🚗</div>
+                    <div class="space-id">C-02</div>
+                    <div class="plate">PQR-678</div>
+                </div>
+
+                <!-- Disponible -->
+                <div class="parking-space disponible">
+                    <div class="icon">✔</div>
+                    <div class="space-id">C-03</div>
+                </div>
+
+                <!-- Disponible -->
+                <div class="parking-space disponible">
+                    <div class="icon">✔</div>
+                    <div class="space-id">C-04</div>
+                </div>
+
+                <!-- Ocupado -->
+                <div class="parking-space ocupado">
+                    <div class="icon">🚗</div>
+                    <div class="space-id">C-05</div>
+                    <div class="plate">STU-901</div>
+                </div>
+
+                <!-- Ocupado -->
+                <div class="parking-space ocupado">
+                    <div class="icon">🚗</div>
+                    <div class="space-id">C-06</div>
+                    <div class="plate">FCS-766</div>
+                </div>
+
+            </div>
 
         </div>
-
-        <!-- GRID ESPACIOS -->
-
-        <div class="grid" id="gridEspacios"></div>
 
 
         <!-- LEYENDA -->

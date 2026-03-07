@@ -192,3 +192,71 @@ display:inline-block;
 border-radius:4px;
 margin-right:8px;
 }
+
+/**/
+
+.parking-container{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
+
+.zone-filters{
+    margin-bottom:20px;
+}
+
+.filter{
+    padding:8px 15px;
+    border:none;
+    border-radius:6px;
+    background:#e5e7eb;
+    cursor:pointer;
+}
+
+.filter.active{
+    background:#2563eb;
+    color:white;
+}
+
+.parking-grid{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:15px;
+}
+
+.parking-space{
+    border-radius:10px;
+    padding:15px;
+    text-align:center;
+    color:white;
+    font-weight:bold;
+}
+
+.parking-space.disponible{
+    background:#16a34a;
+}
+
+.parking-space.ocupado{
+    background:#ef4444;
+}
+
+.parking-space.mantenimiento{
+    background:#f59e0b;
+}
+
+.icon{
+    font-size:22px;
+    margin-bottom:5px;
+}
+
+.space-id{
+    font-size:18px;
+}
+
+.plate{
+    font-size:12px;
+    background:rgba(255,255,255,0.2);
+    padding:3px 6px;
+    border-radius:4px;
+    margin-top:4px;
+}
