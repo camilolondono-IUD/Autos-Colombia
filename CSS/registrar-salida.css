@@ -1,0 +1,161 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+display:flex;
+background:#f5f7fb;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:240px;
+height:100vh;
+background:#0f1c2e;
+color:white;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+}
+
+.logo{
+padding:25px;
+font-size:18px;
+font-weight:bold;
+}
+
+.menu{
+display:flex;
+flex-direction:column;
+}
+
+.menu a{
+color:#cfd6e4;
+text-decoration:none;
+padding:14px 25px;
+transition:0.2s;
+}
+
+.menu a:hover{
+background:#1d2c44;
+}
+
+.menu a.active{
+background:#2f6fed;
+color:white;
+border-radius:8px;
+margin:5px 10px;
+}
+
+.user{
+padding:20px;
+font-size:14px;
+border-top:1px solid #1d2c44;
+}
+
+/* MAIN */
+
+.main{
+flex:1;
+padding:40px;
+}
+
+.back{
+color:#2f6fed;
+font-size:14px;
+cursor:pointer;
+}
+
+h1{
+margin-top:10px;
+}
+
+.subtitle{
+color:#666;
+margin-bottom:25px;
+}
+
+/* BUSCADOR */
+
+.search-box{
+background:white;
+padding:20px;
+border-radius:10px;
+display:flex;
+gap:10px;
+max-width:700px;
+box-shadow:0 2px 6px rgba(0,0,0,0.08);
+}
+
+.search-box input{
+flex:1;
+padding:12px;
+border-radius:8px;
+border:1px solid #ddd;
+font-size:14px;
+}
+
+.search-box button{
+background:#2f6fed;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:8px;
+cursor:pointer;
+}
+
+.search-box button:hover{
+background:#1c54d1;
+}
+
+/* RESULTADO VACIO */
+
+.result{
+margin-top:25px;
+background:white;
+border-radius:10px;
+padding:60px;
+text-align:center;
+color:#888;
+max-width:700px;
+box-shadow:0 2px 6px rgba(0,0,0,0.08);
+}
+
+.car{
+font-size:40px;
+margin-bottom:10px;
+}
+
+/* INFO VEHICULO */
+
+.vehicle-info{
+display:none;
+margin-top:20px;
+background:white;
+padding:25px;
+border-radius:10px;
+max-width:700px;
+box-shadow:0 2px 6px rgba(0,0,0,0.08);
+}
+
+.vehicle-info p{
+margin-bottom:8px;
+}
+
+.exit-btn{
+margin-top:15px;
+background:#28a745;
+color:white;
+border:none;
+padding:10px 18px;
+border-radius:8px;
+cursor:pointer;
+}
+
+.exit-btn:hover{
+background:#1f8a39;
+}
