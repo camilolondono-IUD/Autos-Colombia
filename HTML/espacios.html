@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Espacios</title>
+
+    <link rel="stylesheet" href="../css/espacios.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            🚗 Autos Colombia
+            <p>Sistema de Parqueo</p>
+        </div>
+
+        <nav class="menu">
+            <a href="#">Dashboard</a>
+            <a href="#">Registrar Entrada</a>
+            <a href="#">Registrar Salida</a>
+            <a class="active">Espacios</a>
+            <a href="#">Reportes</a>
+        </nav>
+
+        <div class="user">
+            <strong>Administrador</strong>
+            <p>admin@autoscolombia.com</p>
+        </div>
+
+    </aside>
+
+
+    <!-- CONTENIDO -->
+
+    <main class="main">
+
+        <a class="back">← Volver al Dashboard</a>
+
+        <h1>Gestión de Espacios</h1>
+        <p class="subtitle">Vista en tiempo real de los espacios de parqueo</p>
+
+        <!-- RESUMEN -->
+
+        <div class="cards">
+
+            <div class="card total">
+                <p>Total Espacios</p>
+                <h2 id="total">17</h2>
+            </div>
+
+            <div class="card disponibles">
+                <p>Disponibles</p>
+                <h2 id="disponibles"></h2>
+            </div>
+
+            <div class="card ocupados">
+                <p>Ocupados</p>
+                <h2 id="ocupados"></h2>
+            </div>
+
+            <div class="card mantenimiento">
+                <p>Mantenimiento</p>
+                <h2 id="mantenimiento"></h2>
+            </div>
+
+        </div>
+
+        <!-- FILTROS -->
+
+        <div class="filters">
+
+            <button class="active" onclick="filtrar('todas')">Todas las Zonas</button>
+            <button onclick="filtrar('A')">Zona A</button>
+            <button onclick="filtrar('B')">Zona B</button>
+            <button onclick="filtrar('C')">Zona C</button>
+
+        </div>
+
+        <!-- GRID ESPACIOS -->
+
+        <div class="grid" id="gridEspacios"></div>
+
+
+        <!-- LEYENDA -->
+
+        <div class="legend">
+
+            <div><span class="box disponible"></span> Disponible</div>
+            <div><span class="box ocupado"></span> Ocupado</div>
+            <div><span class="box mantenimiento"></span> Mantenimiento</div>
+
+        </div>
+
+    </main>
+
+    <script src="espacios.js"></script>
+
+</body>
+
+</html>

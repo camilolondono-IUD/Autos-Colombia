@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Entrada - Autos Colombia</title>
+    <link rel="stylesheet" href="../css/entrada.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <h2>Autos Colombia</h2>
+                <p>Sistema de Parqueo</p>
+            </div>
+
+            <nav>
+                <ul>
+                    <li>Dashboard</li>
+                    <li class="active">Registrar Entrada</li>
+                    <li>Registrar Salida</li>
+                    <li>Espacios</li>
+                    <li>Reportes</li>
+                </ul>
+            </nav>
+
+            <div class="user">
+                <p><strong>Administrador</strong></p>
+                <p>admin@autoscolombia.com</p>
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN -->
+        <main class="main">
+
+            <a href="dashboard.html" class="back">← Volver al Dashboard</a>
+
+            <h1>Registro de Entrada</h1>
+            <p class="subtitle">Ingrese los datos del vehículo que está entrando al parqueadero</p>
+
+
+            <div class="card">
+
+                <form id="formEntrada">
+
+                    <div class="grid">
+
+                        <div class="form-group">
+                            <label>Placa del Vehículo *</label>
+                            <input type="text" id="placa" placeholder="ABC-123" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tipo de Vehículo *</label>
+                            <select id="tipo">
+                                <option>Carro</option>
+                                <option>Moto</option>
+                                <option>Camioneta</option>
+                                <option>Van</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nombre del Propietario</label>
+                            <input type="text" id="propietario" placeholder="Juan Pérez">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Teléfono de Contacto</label>
+                            <input type="text" id="telefono" placeholder="300 123 4567">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Espacio de Parqueo *</label>
+                            <select id="espacio">
+                                <option value="">Seleccione un espacio</option>
+                                <option>A-01</option>
+                                <option>A-02</option>
+                                <option>B-01</option>
+                                <option>B-02</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Fecha de Entrada</label>
+                            <input type="date" id="fecha">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Hora de Entrada</label>
+                            <input type="time" id="hora">
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Observaciones</label>
+                        <textarea id="obs" placeholder="Notas adicionales sobre el vehículo..."></textarea>
+                    </div>
+
+
+                    <div class="buttons">
+                        <button type="button" class="btn cancel">Cancelar</button>
+                        <button type="submit" class="btn primary">Registrar Entrada</button>
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div class="tarifas">
+
+                <h3>Información de Tarifas</h3>
+
+                <ul>
+                    <li>Carro/Camioneta: $3.000/hora - $25.000/día</li>
+                    <li>Moto: $2.000/hora - $15.000/día</li>
+                    <li>Van: $4.000/hora - $30.000/día</li>
+                </ul>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="../js/entrada.js"></script>
+
+</body>
+
+</html>
