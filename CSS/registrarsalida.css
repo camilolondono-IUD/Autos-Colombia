@@ -38,6 +38,7 @@ color:#cfd6e4;
 text-decoration:none;
 padding:14px 25px;
 transition:0.2s;
+cursor: pointer;
 }
 
 .menu a:hover{

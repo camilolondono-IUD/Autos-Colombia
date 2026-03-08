@@ -73,3 +73,31 @@ render(filtrados);
 }
 
 render(espacios);
+
+// Navegación del menú lateral
+document.addEventListener('DOMContentLoaded', function() {
+    const navItems = document.querySelectorAll('.menu a');
+    
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const text = this.textContent.trim();
+            switch(text) {
+                case 'Dashboard':
+                    window.location.href = 'dashboard.html';
+                    break;
+                case 'Registrar Entrada':
+                    window.location.href = 'entrada.html';
+                    break;
+                case 'Registrar Salida':
+                    window.location.href = 'registrarsalida.html';
+                    break;
+                case 'Espacios':
+                    window.location.href = 'espacios.html';
+                    break;
+                case 'Reportes':
+                    window.location.href = 'reportes.html';
+                    break;
+            }
+        });
+    });
+});

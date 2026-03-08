@@ -41,6 +41,7 @@ flex-direction:column;
 color:#cfd6e4;
 text-decoration:none;
 padding:14px 25px;
+cursor: pointer;
 }
 
 .menu a:hover{
