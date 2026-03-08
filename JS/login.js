@@ -18,7 +18,7 @@ document.getElementById("loginForm").addEventListener("submit", function(event){
 
     if(usuario === usuarioValido && password === passwordValida){
 
-        alert("Bienvenido al sistema Autos Colombia");
+        // alert("Bienvenido al sistema Autos Colombia");
 
         window.location.href = "dashboard.html";
 
