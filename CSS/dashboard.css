@@ -13,6 +13,7 @@ background:#f5f7fb;
 
 .container{
 height:100vh;
+display: flex;
 }
 
 /* SIDEBAR */
