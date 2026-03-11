@@ -16,10 +16,27 @@ tabla.prepend(fila);
 
 }
 
-document.querySelector(".blue").addEventListener("click", agregarVehiculo);
 
-// Navegación del menú lateral
+// Navegación de acciones rápidas
 document.addEventListener('DOMContentLoaded', function() {
+    // Botones de acciones rápidas
+    document.querySelector(".btn.blue").addEventListener("click", function() {
+        window.location.href = 'entrada.html';
+    });
+
+    document.querySelector(".btn.orange").addEventListener("click", function() {
+        window.location.href = 'registrarsalida.html';
+    });
+
+    document.querySelector(".btn.green").addEventListener("click", function() {
+        window.location.href = 'espacios.html';
+    });
+
+    document.querySelector(".btn.purple").addEventListener("click", function() {
+        window.location.href = 'reportes.html';
+    });
+
+    // Navegación del menú lateral
     const navItems = document.querySelectorAll('nav ul li');
     
     navItems.forEach(item => {
