@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Entrada - Autos Colombia</title>
-    <link rel="stylesheet" href="../css/entrada.css">
+    <link rel="stylesheet" href="../CSS/entrada.css">
 </head>
 
 <body>
@@ -21,10 +22,11 @@
 
             <nav class="menu">
                 <a href="dashboard.html">Dashboard</a>
-                <a class="active" href="#">Registrar Entrada</a>
+                <a class="active" href="entrada.html">Registrar Entrada</a>
                 <a href="registrarsalida.html">Registrar Salida</a>
                 <a href="espacios.html">Espacios</a>
                 <a href="reportes.html">Reportes</a>
+                <a href="usuarios.html">Usuarios</a>
             </nav>
 
             <div class="user">
@@ -38,11 +40,8 @@
         <!-- MAIN -->
         <main class="main">
 
-            <a href="dashboard.html" class="back">← Volver al Dashboard</a>
-
             <h1>Registro de Entrada</h1>
             <p class="subtitle">Ingrese los datos del vehículo que está entrando al parqueadero</p>
-
 
             <div class="card">
 
@@ -57,11 +56,11 @@
 
                         <div class="form-group">
                             <label>Tipo de Vehículo *</label>
-                            <select id="tipo">
-                                <option>Carro</option>
-                                <option>Moto</option>
-                                <option>Camioneta</option>
-                                <option>Van</option>
+                            <select id="tipo" onchange="actualizarCeldas()">
+                                <option value="Carro">Carro</option>
+                                <option value="Moto">Moto</option>
+                                <option value="Camioneta">Camioneta</option>
+                                <option value="Van">Van</option>
                             </select>
                         </div>
 
@@ -78,11 +77,16 @@
                         <div class="form-group">
                             <label>Espacio de Parqueo *</label>
                             <select id="espacio">
-                                <option value="">Seleccione un espacio</option>
-                                <option>A-01</option>
-                                <option>A-02</option>
-                                <option>B-01</option>
-                                <option>B-02</option>
+                                <option value="">Cargando espacios...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Modalidad *</label>
+                            <select id="modalidad">
+                                <option value="hora">Por hora</option>
+                                <option value="dia">Por día</option>
+                                <option value="mensual">Mensual</option>
                             </select>
                         </div>
 
@@ -103,9 +107,8 @@
                         <textarea id="obs" placeholder="Notas adicionales sobre el vehículo..."></textarea>
                     </div>
 
-
                     <div class="buttons">
-                        <button type="button" class="btn cancel">Cancelar</button>
+                        <button type="button" class="btn cancel" onclick="window.location.href='dashboard.html'">Cancelar</button>
                         <button type="submit" class="btn primary">Registrar Entrada</button>
                     </div>
 
@@ -113,25 +116,21 @@
 
             </div>
 
-
             <div class="tarifas">
-
                 <h3>Información de Tarifas</h3>
-
                 <ul>
-                    <li>Carro/Camioneta: $3.000/hora - $25.000/día</li>
-                    <li>Moto: $2.000/hora - $15.000/día</li>
-                    <li>Van: $4.000/hora - $30.000/día</li>
+                    <li>Carro / Camioneta: $3.000/hora — $25.000/día</li>
+                    <li>Moto: $2.000/hora — $15.000/día</li>
+                    <li>Van: $4.000/hora — $30.000/día</li>
+                    <li>Mensual: tarifa fija según acuerdo</li>
                 </ul>
-
             </div>
 
         </main>
 
     </div>
 
-    <script src="../js/entrada.js"></script>
+    <script src="../JS/entrada.js"></script>
 
 </body>
-
 </html>

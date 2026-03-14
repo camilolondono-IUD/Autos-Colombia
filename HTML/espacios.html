@@ -4,15 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Espacios</title>
-
-    <link rel="stylesheet" href="../css/espacios.css">
+    <title>Gestión de Espacios - Autos Colombia</title>
+    <link rel="stylesheet" href="../CSS/espacios.css">
 </head>
 
 <body>
 
     <!-- SIDEBAR -->
-
     <aside class="sidebar">
 
         <div class="logo">
@@ -24,8 +22,9 @@
             <a href="dashboard.html">Dashboard</a>
             <a href="entrada.html">Registrar Entrada</a>
             <a href="registrarsalida.html">Registrar Salida</a>
-            <a class="active">Espacios</a>
+            <a class="active" href="espacios.html">Espacios</a>
             <a href="reportes.html">Reportes</a>
+            <a href="usuarios.html">Usuarios</a>
         </nav>
 
         <div class="user">
@@ -37,189 +36,136 @@
 
 
     <!-- CONTENIDO -->
-
     <main class="main">
 
-        <a class="back" href="dashboard.html">← Volver al Dashboard</a>
+        <div class="main-header">
+            <div>
+                <h1>Gestión de Espacios</h1>
+                <p class="subtitle">Vista en tiempo real de los espacios de parqueo</p>
+            </div>
+            <button class="btn-primary" onclick="mostrarFormularioCelda()">+ Nueva Celda</button>
+        </div>
 
-        <h1>Gestión de Espacios</h1>
-        <p class="subtitle">Vista en tiempo real de los espacios de parqueo</p>
 
         <!-- RESUMEN -->
-
         <div class="cards">
-
             <div class="card total">
                 <p>Total Espacios</p>
-                <h2 id="total">17</h2>
+                <h2 id="total">0</h2>
             </div>
-
             <div class="card disponibles">
                 <p>Disponibles</p>
-                <h2 id="disponibles"></h2>
+                <h2 id="disponibles">0</h2>
             </div>
-
             <div class="card ocupados">
                 <p>Ocupados</p>
-                <h2 id="ocupados"></h2>
+                <h2 id="ocupados">0</h2>
             </div>
-
             <div class="card mantenimiento">
                 <p>Mantenimiento</p>
-                <h2 id="mantenimiento"></h2>
+                <h2 id="mantenimiento">0</h2>
             </div>
-
         </div>
+
 
         <!-- GRID ESPACIOS -->
         <div class="parking-container">
 
-            <!-- Filtros de zona -->
             <div class="zone-filters">
-                <button class="filter active">Todas las Zonas</button>
-                <button class="filter">Zona A</button>
-                <button class="filter">Zona B</button>
-                <button class="filter">Zona C</button>
+                <button class="filter active" onclick="filtrar('todas', this)">Todas las Zonas</button>
+                <button class="filter" onclick="filtrar('A', this)">Zona A</button>
+                <button class="filter" onclick="filtrar('B', this)">Zona B</button>
+                <button class="filter" onclick="filtrar('C', this)">Zona C</button>
+                <button class="filter" onclick="filtrar('D', this)">Zona D</button>
             </div>
 
-            <!-- Cuadrilla de espacios -->
-            <div class="parking-grid">
-
-                <!-- Disponible -->
-                <div class="parking-space disponible">
-                    <div class="icon">✔</div>
-                    <div class="space-id">A-10</div>
-                </div>
-
-                <!-- Disponible -->
-                <div class="parking-space disponible">
-                    <div class="icon">✔</div>
-                    <div class="space-id">A-11</div>
-                </div>
-
-                <!-- Mantenimiento -->
-                <div class="parking-space mantenimiento">
-                    <div class="icon">🔧</div>
-                    <div class="space-id">A-12</div>
-                </div>
-
-                <!-- Ocupado -->
-                <div class="parking-space ocupado">
-                    <div class="icon">🚗</div>
-                    <div class="space-id">A-13</div>
-                    <div class="plate">ABC-123</div>
-                </div>
-
-                <!-- Ocupado -->
-                <div class="parking-space ocupado">
-                    <div class="icon">🚗</div>
-                    <div class="space-id">A-14</div>
-                    <div class="plate">DEF-456</div>
-                </div>
-
-                <!-- Ocupado -->
-                <div class="parking-space ocupado">
-                    <div class="icon">🚗</div>
-                    <div class="space-id">A-15</div>
-                    <div class="plate">GHI-789</div>
-                </div>
-
-                <!-- Disponible -->
-                <div class="parking-space disponible">
-                    <div class="icon">✔</div>
-                    <div class="space-id">B-01</div>
-                </div>
-
-                <!-- Disponible -->
-                <div class="parking-space disponible">
-                    <div class="icon">✔</div>
-                    <div class="space-id">B-02</div>
-                </div>
-
-                <!-- Disponible -->
-                <div class="parking-space disponible">
-                    <div class="icon">✔</div>
-                    <div class="space-id">B-03</div>
-                </div>
-
-                <!-- Ocupado -->
-                <div class="parking-space ocupado">
-                    <div class="icon">🚗</div>
-                    <div class="space-id">B-04</div>
-                    <div class="plate">JKL-012</div>
-                </div>
-
-                <!-- Ocupado -->
-                <div class="parking-space ocupado">
-                    <div class="icon">🚗</div>
-                    <div class="space-id">B-05</div>
-                    <div class="plate">MNO-345</div>
-                </div>
-
-                <!-- Disponible -->
-                <div class="parking-space disponible">
-                    <div class="icon">✔</div>
-                    <div class="space-id">B-06</div>
-                </div>
-
-                <!-- Disponible -->
-                <div class="parking-space disponible">
-                    <div class="icon">✔</div>
-                    <div class="space-id">C-01</div>
-                </div>
-
-                <!-- Ocupado -->
-                <div class="parking-space ocupado">
-                    <div class="icon">🚗</div>
-                    <div class="space-id">C-02</div>
-                    <div class="plate">PQR-678</div>
-                </div>
-
-                <!-- Disponible -->
-                <div class="parking-space disponible">
-                    <div class="icon">✔</div>
-                    <div class="space-id">C-03</div>
-                </div>
-
-                <!-- Disponible -->
-                <div class="parking-space disponible">
-                    <div class="icon">✔</div>
-                    <div class="space-id">C-04</div>
-                </div>
-
-                <!-- Ocupado -->
-                <div class="parking-space ocupado">
-                    <div class="icon">🚗</div>
-                    <div class="space-id">C-05</div>
-                    <div class="plate">STU-901</div>
-                </div>
-
-                <!-- Ocupado -->
-                <div class="parking-space ocupado">
-                    <div class="icon">🚗</div>
-                    <div class="space-id">C-06</div>
-                    <div class="plate">FCS-766</div>
-                </div>
-
-            </div>
+            <div class="parking-grid" id="parkingGrid"></div>
 
         </div>
 
 
         <!-- LEYENDA -->
-
         <div class="legend">
-
             <div><span class="box disponible"></span> Disponible</div>
             <div><span class="box ocupado"></span> Ocupado</div>
             <div><span class="box mantenimiento"></span> Mantenimiento</div>
+        </div>
 
+
+        <!-- MODAL: CAMBIAR ESTADO -->
+        <div id="modalEstado" class="modal-overlay" style="display:none">
+            <div class="modal">
+                <h3>Celda <span id="modalCeldaId"></span></h3>
+                <p class="modal-estado-actual">Estado actual: <span id="modalEstadoActual"></span></p>
+
+                <div class="estado-opciones">
+                    <button class="btn-estado disponible" onclick="aplicarEstado('disponible')">✔ Disponible</button>
+                    <button class="btn-estado ocupado" onclick="aplicarEstado('ocupado')">🚗 Ocupado</button>
+                    <button class="btn-estado mantenimiento" onclick="aplicarEstado('mantenimiento')">🔧 Mantenimiento</button>
+                </div>
+
+                <p class="modal-info">Cambio registrado por: <strong>Administrador</strong></p>
+
+                <div class="modal-buttons">
+                    <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- MODAL: NUEVA CELDA -->
+        <div id="modalNuevaCelda" class="modal-overlay" style="display:none">
+            <div class="modal modal-form">
+                <h3>Registrar Nueva Celda</h3>
+
+                <div class="form-group">
+                    <label>Identificador *</label>
+                    <input type="text" id="nuevaId" placeholder="Ej: D-01">
+                </div>
+
+                <div class="form-group">
+                    <label>Zona *</label>
+                    <select id="nuevaZona">
+                        <option value="">Seleccione una zona</option>
+                        <option value="A">Zona A</option>
+                        <option value="B">Zona B</option>
+                        <option value="C">Zona C</option>
+                        <option value="D">Zona D</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de vehículo permitido *</label>
+                    <select id="nuevaTipo">
+                        <option value="Carro">Carro</option>
+                        <option value="Moto">Moto</option>
+                        <option value="Camioneta">Camioneta</option>
+                        <option value="Van">Van</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Estado inicial</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="estadoInicial" value="disponible" checked> Disponible
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="estadoInicial" value="mantenimiento"> En mantenimiento
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-buttons">
+                    <button class="btn-cancel" onclick="cerrarModalCelda()">Cancelar</button>
+                    <button class="btn-primary" onclick="guardarNuevaCelda()">Guardar Celda</button>
+                </div>
+            </div>
         </div>
 
     </main>
 
-    <script src="espacios.js"></script>
+    <script src="../JS/espacios.js"></script>
 
 </body>
-
 </html>
