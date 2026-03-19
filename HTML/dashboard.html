@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="es">
-
+ 
 <head>
     <meta charset="UTF-8">
     <title>Dashboard - Autos Colombia</title>
-    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../CSS/dashboard.css">
 </head>
-
+ 
 <body>
-
+ 
     <div class="container">
-
+ 
         <!-- SIDEBAR -->
         <aside class="sidebar">
-
+ 
             <div class="logo">
                 🚗 Autos Colombia
                 <p>Sistema de Parqueo</p>
             </div>
-
+ 
             <nav class="menu">
                 <a class="active" href="dashboard.html">Dashboard</a>
                 <a href="entrada.html">Registrar Entrada</a>
@@ -27,63 +27,61 @@
                 <a href="reportes.html">Reportes</a>
                 <a href="usuarios.html">Usuarios</a>
             </nav>
-
+ 
             <div class="user">
                 <strong>Administrador</strong>
                 <p>admin@autoscolombia.com</p>
             </div>
-
+ 
         </aside>
-
-
+ 
+ 
         <!-- MAIN CONTENT -->
         <main class="main">
-
+ 
             <h1>Dashboard</h1>
             <p class="subtitle">Gestión del Parqueadero Autos Colombia</p>
-
-
+ 
+ 
             <!-- CARDS -->
             <div class="cards">
-
+ 
                 <div class="card">
                     <h3>Espacios Ocupados</h3>
-                    <p class="big">42/60</p>
+                    <p class="big">0/0</p>
                     <div class="bar">
                         <div class="fill"></div>
                     </div>
                 </div>
-
+ 
                 <div class="card">
                     <h3>Vehículos Hoy</h3>
-                    <p class="big">128</p>
-                    <span class="positive">+12%</span>
+                    <p class="big">0</p>
                 </div>
-
+ 
                 <div class="card">
                     <h3>Ingresos Hoy</h3>
-                    <p class="big">$847.500</p>
-                    <span class="positive">+8%</span>
+                    <p class="big">$0</p>
                 </div>
-
+ 
                 <div class="card alert">
                     <h3>Alertas</h3>
-                    <p class="big">3</p>
+                    <p class="big">0</p>
                 </div>
-
+ 
             </div>
-
-
+ 
+ 
             <!-- CONTENT GRID -->
             <div class="content">
-
+ 
                 <!-- TABLA -->
                 <div class="table-card">
-
+ 
                     <div class="table-header">
                         <h2>Vehículos Recientes</h2>
                     </div>
-
+ 
                     <table>
                         <thead>
                             <tr>
@@ -94,71 +92,40 @@
                                 <th>Estado</th>
                             </tr>
                         </thead>
-
                         <tbody id="tablaVehiculos">
-
-                            <tr>
-                                <td>ABC-123</td>
-                                <td>A-15</td>
-                                <td>14:30</td>
-                                <td>Carro</td>
-                                <td><span class="estado">Activo</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>XYZ-789</td>
-                                <td>B-08</td>
-                                <td>14:15</td>
-                                <td>Moto</td>
-                                <td><span class="estado">Activo</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>DEF-456</td>
-                                <td>A-23</td>
-                                <td>13:45</td>
-                                <td>Carro</td>
-                                <td><span class="estado">Activo</span></td>
-                            </tr>
-
                         </tbody>
-
                     </table>
-
+ 
                 </div>
-
-
+ 
+ 
                 <!-- ACCIONES -->
                 <div class="actions">
-
+ 
                     <h3>Acciones Rápidas</h3>
-
+ 
                     <button class="btn blue">Registrar Entrada</button>
                     <button class="btn orange">Registrar Salida</button>
                     <button class="btn green">Ver Espacios</button>
                     <button class="btn purple">Generar Reporte</button>
-
+ 
                     <div class="alert-box">
                         <h4>Alertas Activas</h4>
-
                         <ul>
-                            <li>Espacio A-12 requiere mantenimiento</li>
-                            <li>Vehículo ABC-999 más de 24h</li>
-                            <li>Sistema de pago offline</li>
+                            <li>Espacio A-12 en mantenimiento</li>
                         </ul>
-
                     </div>
-
+ 
                 </div>
-
+ 
             </div>
-
+ 
         </main>
-
+ 
     </div>
-
-    <script src="../js/dashboard.js"></script>
-
+ 
+    <script src="../JS/dashboard.js"></script>
+ 
 </body>
-
+ 
 </html>
