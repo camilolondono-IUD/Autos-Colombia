@@ -8,27 +8,27 @@ function cargarCeldas() {
     const datos = localStorage.getItem(CELDAS_KEY);
     if (datos) return JSON.parse(datos);
 
-    // Datos de ejemplo para la primera carga (igual a tu código original)
-    const inicial = [
-        { numero: 'A-10', zona: 'A', tipo: 'Carro', estado: 'disponible', placa: null },
-        { numero: 'A-11', zona: 'A', tipo: 'Carro', estado: 'disponible', placa: null },
-        { numero: 'A-12', zona: 'A', tipo: 'Carro', estado: 'mantenimiento', placa: null },
-        { numero: 'A-13', zona: 'A', tipo: 'Carro', estado: 'ocupado', placa: 'ABC-123' },
-        { numero: 'A-14', zona: 'A', tipo: 'Carro', estado: 'ocupado', placa: 'DEF-456' },
-        { numero: 'A-15', zona: 'A', tipo: 'Carro', estado: 'ocupado', placa: 'GHI-789' },
-        { numero: 'B-01', zona: 'B', tipo: 'Moto',  estado: 'disponible', placa: null },
-        { numero: 'B-02', zona: 'B', tipo: 'Moto',  estado: 'disponible', placa: null },
-        { numero: 'B-03', zona: 'B', tipo: 'Moto',  estado: 'disponible', placa: null },
-        { numero: 'B-04', zona: 'B', tipo: 'Moto',  estado: 'ocupado', placa: 'JKL-012' },
-        { numero: 'B-05', zona: 'B', tipo: 'Moto',  estado: 'ocupado', placa: 'MNO-345' },
-        { numero: 'B-06', zona: 'B', tipo: 'Moto',  estado: 'disponible', placa: null },
-        { numero: 'C-01', zona: 'C', tipo: 'Camioneta', estado: 'disponible', placa: null },
-        { numero: 'C-02', zona: 'C', tipo: 'Camioneta', estado: 'ocupado', placa: 'PQR-678' },
-        { numero: 'C-03', zona: 'C', tipo: 'Camioneta', estado: 'disponible', placa: null },
-        { numero: 'C-04', zona: 'C', tipo: 'Camioneta', estado: 'disponible', placa: null },
-        { numero: 'C-05', zona: 'C', tipo: 'Camioneta', estado: 'ocupado', placa: 'STU-901' },
-        { numero: 'C-06', zona: 'C', tipo: 'Camioneta', estado: 'ocupado', placa: 'FCS-766' },
-    ];
+    // // Datos de ejemplo para la primera carga (igual a tu código original)
+    // const inicial = [
+    //     { numero: 'A-10', zona: 'A', tipo: 'Carro', estado: 'disponible', placa: null },
+    //     { numero: 'A-11', zona: 'A', tipo: 'Carro', estado: 'disponible', placa: null },
+    //     { numero: 'A-12', zona: 'A', tipo: 'Carro', estado: 'mantenimiento', placa: null },
+    //     { numero: 'A-13', zona: 'A', tipo: 'Carro', estado: 'ocupado', placa: 'ABC-123' },
+    //     { numero: 'A-14', zona: 'A', tipo: 'Carro', estado: 'ocupado', placa: 'DEF-456' },
+    //     { numero: 'A-15', zona: 'A', tipo: 'Carro', estado: 'ocupado', placa: 'GHI-789' },
+    //     { numero: 'B-01', zona: 'B', tipo: 'Moto',  estado: 'disponible', placa: null },
+    //     { numero: 'B-02', zona: 'B', tipo: 'Moto',  estado: 'disponible', placa: null },
+    //     { numero: 'B-03', zona: 'B', tipo: 'Moto',  estado: 'disponible', placa: null },
+    //     { numero: 'B-04', zona: 'B', tipo: 'Moto',  estado: 'ocupado', placa: 'JKL-012' },
+    //     { numero: 'B-05', zona: 'B', tipo: 'Moto',  estado: 'ocupado', placa: 'MNO-345' },
+    //     { numero: 'B-06', zona: 'B', tipo: 'Moto',  estado: 'disponible', placa: null },
+    //     { numero: 'C-01', zona: 'C', tipo: 'Camioneta', estado: 'disponible', placa: null },
+    //     { numero: 'C-02', zona: 'C', tipo: 'Camioneta', estado: 'ocupado', placa: 'PQR-678' },
+    //     { numero: 'C-03', zona: 'C', tipo: 'Camioneta', estado: 'disponible', placa: null },
+    //     { numero: 'C-04', zona: 'C', tipo: 'Camioneta', estado: 'disponible', placa: null },
+    //     { numero: 'C-05', zona: 'C', tipo: 'Camioneta', estado: 'ocupado', placa: 'STU-901' },
+    //     { numero: 'C-06', zona: 'C', tipo: 'Camioneta', estado: 'ocupado', placa: 'FCS-766' },
+    // ];
 
     guardarCeldas(inicial);
     return inicial;

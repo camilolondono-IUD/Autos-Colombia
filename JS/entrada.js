@@ -4,14 +4,44 @@ const CELDAS_KEY    = 'celdas_db';
 const ENTRADAS_KEY  = 'registros_entrada';
 const RECIENTES_KEY = 'vehiculos_recientes';
 
-const MINUTOS_RECIENTES = 5; // tiempo en minutos que duran en el dashboard
+const MINUTOS_RECIENTES = 5;
 
 
-// ─── INICIALIZAR CELDAS SI localStorage ESTÁ VACÍO ──────────────────────────
+// ─── UTILIDADES DE FECHA Y HORA LOCAL ─────────────────────────────────────────
+// Nunca usar toISOString() — convierte a UTC y en Colombia (UTC-5)
+// las horas nocturnas saltan al día siguiente.
+
+// Retorna "YYYY-MM-DD" en hora local (para el input type="date")
+function fechaLocalISO(d) {
+    const yy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yy}-${mm}-${dd}`;
+}
+
+// Retorna "HH:MM" en hora local (para el input type="time")
+function horaLocalHHMM(d) {
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mi = String(d.getMinutes()).padStart(2, '0');
+    return `${hh}:${mi}`;
+}
+
+// Formatea fecha+hora para mostrar: "18/03/2026 9:32pm"
+function formatearFechaHora(fechaISO, horaHHMM) {
+    // fechaISO: "YYYY-MM-DD", horaHHMM: "HH:MM"
+    const [yy, mm, dd] = fechaISO.split('-');
+    const [hh, mi] = horaHHMM.split(':');
+    const h = parseInt(hh);
+    const ampm = h >= 12 ? 'pm' : 'am';
+    const h12  = h % 12 || 12;
+    return `${dd}/${mm}/${yy} ${h12}:${mi}${ampm}`;
+}
+
+
+// ─── INICIALIZAR CELDAS SI localStorage ESTÁ VACÍO ───────────────────────────
 
 function inicializarCeldas() {
-    const datos = localStorage.getItem(CELDAS_KEY);
-    if (datos) return; // ya existen, no hacer nada
+    if (localStorage.getItem(CELDAS_KEY)) return;
 
     const inicial = [
         { numero: 'A-10', zona: 'A', tipo: 'Carro',     estado: 'disponible', placa: null },
@@ -33,21 +63,17 @@ function inicializarCeldas() {
         { numero: 'C-05', zona: 'C', tipo: 'Camioneta', estado: 'disponible', placa: null },
         { numero: 'C-06', zona: 'C', tipo: 'Camioneta', estado: 'disponible', placa: null },
     ];
-
     localStorage.setItem(CELDAS_KEY, JSON.stringify(inicial));
 }
 
 
-// ─── CARGAR CELDAS DISPONIBLES EN EL SELECT ───────────────────────────────────
+// ─── CARGAR CELDAS DISPONIBLES EN EL SELECT ──────────────────────────────────
 
 function actualizarCeldas() {
-    const tipo     = document.getElementById('tipo').value;
-    const select   = document.getElementById('espacio');
-    const celdas   = JSON.parse(localStorage.getItem(CELDAS_KEY) || '[]');
+    const tipo   = document.getElementById('tipo').value;
+    const select = document.getElementById('espacio');
+    const celdas = JSON.parse(localStorage.getItem(CELDAS_KEY) || '[]');
 
-    // Filtrar celdas disponibles Y compatibles con el tipo de vehículo.
-    // La celda debe estar disponible y su tipo debe coincidir con el del vehículo.
-    // Si la celda no tiene tipo definido, acepta cualquier vehículo.
     const disponibles = celdas.filter(c => {
         if (c.estado !== 'disponible') return false;
         if (!c.tipo || c.tipo === '') return true;
@@ -64,7 +90,6 @@ function actualizarCeldas() {
         return;
     }
 
-    // Opción por defecto
     const def = document.createElement('option');
     def.value = '';
     def.textContent = 'Seleccione un espacio';
@@ -73,7 +98,6 @@ function actualizarCeldas() {
     disponibles.forEach(c => {
         const opt = document.createElement('option');
         opt.value = c.numero;
-        // Mostrar zona y tipo de vehículo permitido como referencia
         opt.textContent = `${c.numero} — Zona ${c.zona} (${c.tipo || 'Cualquier tipo'})`;
         select.appendChild(opt);
     });
@@ -85,30 +109,23 @@ function actualizarCeldas() {
 document.getElementById('formEntrada').addEventListener('submit', function (e) {
     e.preventDefault();
 
-    const placa      = document.getElementById('placa').value.trim().toUpperCase();
-    const tipo       = document.getElementById('tipo').value;
+    const placa       = document.getElementById('placa').value.trim().toUpperCase();
+    const tipo        = document.getElementById('tipo').value;
     const propietario = document.getElementById('propietario').value.trim();
-    const telefono   = document.getElementById('telefono').value.trim();
-    const espacio    = document.getElementById('espacio').value;
-    const modalidad  = document.getElementById('modalidad').value;
-    const fecha      = document.getElementById('fecha').value;
-    const hora       = document.getElementById('hora').value;
-    const obs        = document.getElementById('obs').value.trim();
+    const telefono    = document.getElementById('telefono').value.trim();
+    const espacio     = document.getElementById('espacio').value;
+    const modalidad   = document.getElementById('modalidad').value;
+    const obs         = document.getElementById('obs').value.trim();
 
-    // Validaciones
-    if (!placa) {
-        alert('Ingrese la placa del vehículo.');
-        return;
-    }
+    // Leer fecha y hora del formulario (siempre local, nunca ISO)
+    const ahora      = new Date();
+    const fechaInput = document.getElementById('fecha').value || fechaLocalISO(ahora);
+    const horaInput  = document.getElementById('hora').value  || horaLocalHHMM(ahora);
 
-    if (!espacio) {
-        alert('Seleccione un espacio de parqueo disponible.');
-        return;
-    }
+    if (!placa) { alert('Ingrese la placa del vehículo.'); return; }
+    if (!espacio) { alert('Seleccione un espacio de parqueo disponible.'); return; }
 
-    // Verificar nuevamente que la celda sigue disponible
-    // (puede haber cambiado desde que se cargó la página)
-    const celdas = JSON.parse(localStorage.getItem(CELDAS_KEY) || '[]');
+    const celdas     = JSON.parse(localStorage.getItem(CELDAS_KEY) || '[]');
     const celdaIndex = celdas.findIndex(c => c.numero === espacio);
 
     if (celdaIndex === -1 || celdas[celdaIndex].estado !== 'disponible') {
@@ -117,7 +134,6 @@ document.getElementById('formEntrada').addEventListener('submit', function (e) {
         return;
     }
 
-    // Verificar que la placa no esté ya registrada como activa
     const entradas = JSON.parse(localStorage.getItem(ENTRADAS_KEY) || '[]');
     const yaActiva = entradas.find(r => r.placa === placa && r.estado === 'activo');
     if (yaActiva) {
@@ -125,44 +141,33 @@ document.getElementById('formEntrada').addEventListener('submit', function (e) {
         return;
     }
 
-    // Fecha y hora automáticas si no se completaron
-    const ahora    = new Date();
-    const fechaFinal = fecha || ahora.toISOString().split('T')[0];
-    const horaFinal  = hora  || ahora.toTimeString().slice(0, 5);
-
-    // Crear registro de entrada
     const registro = {
-        id:          Date.now(),
+        id:        Date.now(),
         placa,
         tipo,
         propietario,
         telefono,
         espacio,
         modalidad,
-        fecha:       fechaFinal,
-        hora:        horaFinal,
-        horaTimestamp: ahora.getTime(),
+        fecha:     fechaInput,   // "YYYY-MM-DD" local
+        hora:      horaInput,    // "HH:MM" local (24h, para cálculos)
         obs,
-        estado:      'activo'
+        estado:    'activo'
     };
 
-    // Guardar en entradas
     entradas.push(registro);
     localStorage.setItem(ENTRADAS_KEY, JSON.stringify(entradas));
 
-    // Marcar celda como ocupada y guardar placa
     celdas[celdaIndex].estado = 'ocupado';
     celdas[celdaIndex].placa  = placa;
     localStorage.setItem(CELDAS_KEY, JSON.stringify(celdas));
 
-    // Guardar en recientes para el dashboard (con timestamp de expiración)
     guardarReciente(registro);
 
     alert(`Vehículo ${placa} registrado correctamente en el espacio ${espacio}.`);
-
     document.getElementById('formEntrada').reset();
-    actualizarCeldas();
     setFechaHoraActual();
+    actualizarCeldas();
 });
 
 
@@ -170,42 +175,32 @@ document.getElementById('formEntrada').addEventListener('submit', function (e) {
 
 function guardarReciente(registro) {
     const recientes = obtenerRecientesValidos();
-
     recientes.unshift({
         ...registro,
         expira: Date.now() + MINUTOS_RECIENTES * 60 * 1000
     });
-
-    // Guardar solo los últimos 20 para no saturar
     localStorage.setItem(RECIENTES_KEY, JSON.stringify(recientes.slice(0, 20)));
 }
 
 function obtenerRecientesValidos() {
     const datos = JSON.parse(localStorage.getItem(RECIENTES_KEY) || '[]');
-    const ahora = Date.now();
-    // Filtrar los que no han expirado
-    return datos.filter(r => r.expira > ahora);
+    return datos.filter(r => r.expira > Date.now());
 }
 
 
-// ─── FECHA Y HORA ACTUAL AUTOMÁTICA ───────────────────────────────────────────
+// ─── FECHA Y HORA ACTUAL AUTOMÁTICA ──────────────────────────────────────────
 
 function setFechaHoraActual() {
-    const ahora = new Date();
-
+    const ahora      = new Date();
     const fechaInput = document.getElementById('fecha');
     const horaInput  = document.getElementById('hora');
 
-    if (fechaInput && !fechaInput.value) {
-        fechaInput.value = ahora.toISOString().split('T')[0];
-    }
-    if (horaInput && !horaInput.value) {
-        horaInput.value = ahora.toTimeString().slice(0, 5);
-    }
+    if (fechaInput) fechaInput.value = fechaLocalISO(ahora);
+    if (horaInput)  horaInput.value  = horaLocalHHMM(ahora);
 }
 
 
-// ─── INICIO ───────────────────────────────────────────────────────────────────
+// ─── INICIO ──────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', function () {
     inicializarCeldas();
