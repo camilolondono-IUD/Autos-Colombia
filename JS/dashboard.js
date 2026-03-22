@@ -1,7 +1,7 @@
 // ─── CLAVES localStorage ──────────────────────────────────────────────────────
 
-const CELDAS_KEY    = 'celdas_db';
-const ENTRADAS_KEY  = 'registros_entrada';
+const CELDAS_KEY = 'celdas_db';
+const ENTRADAS_KEY = 'registros_entrada';
 const RECIENTES_KEY = 'vehiculos_recientes';
 
 
@@ -23,10 +23,10 @@ function horaLocalHHMM(d) {
 // Muestra "18/03/2026 9:32pm"
 function formatearMostrar(fechaISO, horaHHMM) {
     const [yy, mm, dd] = fechaISO.split('-');
-    const [hh, mi]     = horaHHMM.split(':');
-    const h    = parseInt(hh);
+    const [hh, mi] = horaHHMM.split(':');
+    const h = parseInt(hh);
     const ampm = h >= 12 ? 'pm' : 'am';
-    const h12  = h % 12 || 12;
+    const h12 = h % 12 || 12;
     return `${dd}/${mm}/${yy} ${h12}:${mi}${ampm}`;
 }
 
@@ -38,13 +38,13 @@ function formatearPesos(valor) {
 }
 
 function actualizarCards() {
-    const celdas   = JSON.parse(localStorage.getItem(CELDAS_KEY) || '[]');
+    const celdas = JSON.parse(localStorage.getItem(CELDAS_KEY) || '[]');
     const entradas = JSON.parse(localStorage.getItem(ENTRADAS_KEY) || '[]');
-    const salidas  = JSON.parse(localStorage.getItem('registros_salida') || '[]');
+    const salidas = JSON.parse(localStorage.getItem('registros_salida') || '[]');
 
     const ocupados = celdas.filter(c => c.estado === 'ocupado').length;
-    const total    = celdas.length;
-    const hoy      = fechaLocalISO(new Date());
+    const total = celdas.length;
+    const hoy = fechaLocalISO(new Date());
 
     // Vehículos que entraron hoy
     const vehiculosHoy = entradas.filter(r => r.fecha === hoy).length;
@@ -70,14 +70,35 @@ function actualizarCards() {
     // Card 3 — Ingresos hoy
     const cardIngresos = document.querySelector('.card:nth-child(3) .big');
     if (cardIngresos) cardIngresos.textContent = formatearPesos(ingresosHoy);
+
+    // Card 4 — Alertas: celdas en mantenimiento
+    const celdасMantenimiento = celdas.filter(c => c.estado === 'mantenimiento');
+    const cardAlertas = document.querySelector('.card.alert .big');
+    if (cardAlertas) cardAlertas.textContent = celdасMantenimiento.length;
 }
 
+function actualizarAlertas() {
+    const celdas = JSON.parse(localStorage.getItem(CELDAS_KEY) || '[]');
+    const lista  = document.getElementById('listaAlertas');
+    if (!lista) return;
+
+    const enMantenimiento = celdas.filter(c => c.estado === 'mantenimiento');
+
+    if (enMantenimiento.length === 0) {
+        lista.innerHTML = '<li>Sin alertas activas</li>';
+        return;
+    }
+
+    lista.innerHTML = enMantenimiento
+        .map(c => `<li>Celda ${c.numero} (Zona ${c.zona}) en mantenimiento</li>`)
+        .join('');
+}
 
 // ─── TABLA DE VEHÍCULOS RECIENTES ─────────────────────────────────────────────
 
 function etiquetaModalidad(modalidad) {
-    if (modalidad === 'hora')    return 'Por hora';
-    if (modalidad === 'dia')     return 'Por día';
+    if (modalidad === 'hora') return 'Por hora';
+    if (modalidad === 'dia') return 'Por día';
     if (modalidad === 'mensual') return 'Mensual';
     return modalidad || '-';
 }
@@ -86,8 +107,8 @@ function cargarRecientes() {
     const tabla = document.getElementById('tablaVehiculos');
     if (!tabla) return;
 
-    const ahora  = Date.now();
-    const datos  = JSON.parse(localStorage.getItem(RECIENTES_KEY) || '[]');
+    const ahora = Date.now();
+    const datos = JSON.parse(localStorage.getItem(RECIENTES_KEY) || '[]');
     const validos = datos.filter(r => r.expira > ahora);
 
     // Limpiar expirados del localStorage
@@ -125,14 +146,14 @@ function cargarRecientes() {
 // ─── BOTONES ACCIONES RÁPIDAS ─────────────────────────────────────────────────
 
 function configurarBotones() {
-    const btnBlue   = document.querySelector('.btn.blue');
+    const btnBlue = document.querySelector('.btn.blue');
     const btnOrange = document.querySelector('.btn.orange');
-    const btnGreen  = document.querySelector('.btn.green');
+    const btnGreen = document.querySelector('.btn.green');
     const btnPurple = document.querySelector('.btn.purple');
 
-    if (btnBlue)   btnBlue.onclick   = () => window.location.href = 'entrada.html';
+    if (btnBlue) btnBlue.onclick = () => window.location.href = 'entrada.html';
     if (btnOrange) btnOrange.onclick = () => window.location.href = 'registrarsalida.html';
-    if (btnGreen)  btnGreen.onclick  = () => window.location.href = 'espacios.html';
+    if (btnGreen) btnGreen.onclick = () => window.location.href = 'espacios.html';
     if (btnPurple) btnPurple.onclick = () => window.location.href = 'reportes.html';
 }
 
@@ -141,12 +162,13 @@ function configurarBotones() {
 
 document.addEventListener('DOMContentLoaded', function () {
     actualizarCards();
+    actualizarAlertas();
     cargarRecientes();
     configurarBotones();
 
-    // Refresco cada 30 segundos
     setInterval(() => {
         cargarRecientes();
         actualizarCards();
+        actualizarAlertas();
     }, 30000);
 });

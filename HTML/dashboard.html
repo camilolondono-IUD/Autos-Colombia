@@ -1,50 +1,81 @@
 <!DOCTYPE html>
 <html lang="es">
- 
+
 <head>
     <meta charset="UTF-8">
     <title>Dashboard - Autos Colombia</title>
+    <link rel="stylesheet" href="../CSS/sidebar.css">
     <link rel="stylesheet" href="../CSS/dashboard.css">
 </head>
- 
+
 <body>
- 
+
     <div class="container">
- 
+
         <!-- SIDEBAR -->
         <aside class="sidebar">
- 
+
             <div class="logo">
                 🚗 Autos Colombia
                 <p>Sistema de Parqueo</p>
             </div>
- 
+
             <nav class="menu">
-                <a class="active" href="dashboard.html">Dashboard</a>
+                <a href="dashboard.html" class="active">Dashboard</a>
                 <a href="entrada.html">Registrar Entrada</a>
                 <a href="registrarsalida.html">Registrar Salida</a>
                 <a href="espacios.html">Espacios</a>
                 <a href="reportes.html">Reportes</a>
                 <a href="usuarios.html">Usuarios</a>
             </nav>
- 
-            <div class="user">
-                <strong>Administrador</strong>
-                <p>admin@autoscolombia.com</p>
+            <div class="user" id="sidebarUser" onclick="abrirModalUsuario()" style="cursor:pointer">
+                <strong id="sidebarNombre">Cargando...</strong>
+                <p id="sidebarCorreo"></p>
+                <p id="sidebarRol" style="font-size:11px;color:#5a7ab5;margin-top:2px"></p>
             </div>
- 
+
+            <!-- MODAL USUARIO -->
+            <div id="modalUsuario" class="modal-usuario-overlay">
+                <div class="modal-usuario">
+                    <div class="modal-usuario-header">
+                        <div class="modal-avatar" id="modalAvatar"></div>
+                        <div>
+                            <p class="modal-usuario-nombre" id="modalNombre"></p>
+                            <p class="modal-usuario-rol" id="modalRol"></p>
+                        </div>
+                    </div>
+                    <div class="modal-usuario-campos">
+                        <div class="modal-usuario-campo">
+                            <span class="modal-usuario-label">Correo</span>
+                            <span class="modal-usuario-valor" id="modalCorreo"></span>
+                        </div>
+                        <div class="modal-usuario-campo">
+                            <span class="modal-usuario-label">Teléfono</span>
+                            <span class="modal-usuario-valor" id="modalTelefono"></span>
+                        </div>
+                        <div class="modal-usuario-campo">
+                            <span class="modal-usuario-label">Documento</span>
+                            <span class="modal-usuario-valor" id="modalDocumento"></span>
+                        </div>
+                    </div>
+                    <div class="modal-usuario-botones">
+                        <button class="btn-cerrar-modal" onclick="cerrarModalUsuario()">Cerrar</button>
+                        <button class="btn-cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+                    </div>
+                </div>
+            </div>
         </aside>
- 
+
         <!-- MAIN CONTENT -->
         <main class="main">
- 
+
             <h1>Dashboard</h1>
             <p class="subtitle">Gestión del Parqueadero Autos Colombia</p>
- 
- 
+
+
             <!-- CARDS -->
             <div class="cards">
- 
+
                 <div class="card">
                     <h3>Espacios Ocupados</h3>
                     <p class="big">0/0</p>
@@ -52,35 +83,37 @@
                         <div class="fill"></div>
                     </div>
                 </div>
- 
+
                 <div class="card">
                     <h3>Vehículos Hoy</h3>
                     <p class="big">0</p>
                 </div>
- 
+
                 <div class="card">
                     <h3>Ingresos Hoy</h3>
                     <p class="big">$0</p>
                 </div>
- 
-                <div class="card alert">
-                    <h3>Alertas</h3>
-                    <p class="big">0</p>
+
+                <div class="alert-box">
+                    <h4>Alertas Activas</h4>
+                    <ul id="listaAlertas">
+                        <li>Sin alertas activas</li>
+                    </ul>
                 </div>
- 
+
             </div>
- 
- 
+
+
             <!-- CONTENT GRID -->
             <div class="content">
- 
+
                 <!-- TABLA -->
                 <div class="table-card">
- 
+
                     <div class="table-header">
                         <h2>Vehículos Recientes</h2>
                     </div>
- 
+
                     <table>
                         <thead>
                             <tr>
@@ -94,37 +127,31 @@
                         <tbody id="tablaVehiculos">
                         </tbody>
                     </table>
- 
+
                 </div>
- 
- 
+
+
                 <!-- ACCIONES -->
                 <div class="actions">
- 
+
                     <h3>Acciones Rápidas</h3>
- 
+
                     <button class="btn blue">Registrar Entrada</button>
                     <button class="btn orange">Registrar Salida</button>
                     <button class="btn green">Ver Espacios</button>
                     <button class="btn purple">Generar Reporte</button>
- 
-                    <div class="alert-box">
-                        <h4>Alertas Activas</h4>
-                        <ul>
-                            <li>Espacio A-12 en mantenimiento</li>
-                        </ul>
-                    </div>
- 
+
                 </div>
- 
+
             </div>
- 
+
         </main>
- 
+
     </div>
- 
+
+    <script src="../JS/sidebar.js"></script>
     <script src="../JS/dashboard.js"></script>
- 
+
 </body>
- 
+
 </html>
