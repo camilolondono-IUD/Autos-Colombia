@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Salida - Autos Colombia</title>
+    <title>Registrar Salida - Autos Colombia</title>
     <link rel="stylesheet" href="../CSS/sidebar.css">
     <link rel="stylesheet" href="../CSS/registrarsalida.css">
 </head>
@@ -24,6 +24,7 @@
                 <a href="entrada.html">Registrar Entrada</a>
                 <a class="active" href="registrarsalida.html">Registrar Salida</a>
                 <a href="espacios.html">Espacios</a>
+                <a href="pagos.html">Pagos</a>
                 <a href="reportes.html">Reportes</a>
                 <a href="usuarios.html">Usuarios</a>
             </nav>
@@ -69,8 +70,8 @@
         <!-- CONTENIDO -->
         <main class="main">
 
-            <h1>Registro de Salida</h1>
-            <p class="subtitle">Busque el vehículo y procese su salida del parqueadero</p>
+            <h1>Registrar Salida</h1>
+            <p class="subtitle">Busque el vehículo, seleccione el método de pago y confirme la salida</p>
 
             <!-- BUSCADOR -->
             <div class="search-box">
@@ -78,20 +79,17 @@
                 <button onclick="buscarVehiculo()">Buscar</button>
             </div>
 
-
             <!-- MENSAJE VACÍO -->
             <div class="result" id="placeholder">
                 <div class="car-icon">🚗</div>
                 <p>Ingrese una placa para buscar el vehículo</p>
             </div>
 
-
             <!-- NO ENCONTRADO -->
             <div class="result result-error" id="noEncontrado" style="display:none">
                 <div class="car-icon">❌</div>
                 <p id="msgNoEncontrado"></p>
             </div>
-
 
             <!-- INFORMACIÓN DEL VEHÍCULO -->
             <div class="vehicle-card" id="info" style="display:none">
@@ -135,29 +133,65 @@
 
                 </div>
 
-
                 <!-- COBRO NORMAL -->
                 <div id="seccionCobro" class="cobro-box">
                     <div class="cobro-label">Total a pagar</div>
                     <div class="cobro-valor" id="vpago"></div>
-                </div>
 
+                    <!-- MÉTODO DE PAGO — solo visible en cobro normal -->
+                    <div class="metodo-pago-section">
+                        <div class="metodo-label">Método de pago</div>
+                        <div class="metodo-opciones">
+                            <button class="btn-metodo activo" data-metodo="Efectivo"     onclick="seleccionarMetodo(this)">💵 Efectivo</button>
+                            <button class="btn-metodo"        data-metodo="Transferencia" onclick="seleccionarMetodo(this)">🏦 Transferencia</button>
+                            <button class="btn-metodo"        data-metodo="Tarjeta"       onclick="seleccionarMetodo(this)">💳 Tarjeta</button>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- MENSUAL: sin cobro -->
                 <div id="seccionMensual" class="mensual-box" style="display:none">
                     <div class="mensual-icon">ℹ️</div>
                     <div>
                         <strong>Cliente con mensualidad activa</strong>
-                        <p>Este vehículo tiene contrato mensual vigente. No se realiza cobro adicional por la salida.
-                        </p>
+                        <p>Este vehículo tiene contrato mensual vigente. No se realiza cobro adicional por la salida.</p>
                     </div>
                 </div>
 
+                <!-- NOTA FLUJO AUTOMÁTICO -->
+                <div class="flujo-nota">
+                    ✓ Al confirmar: la salida se registra, la celda se libera y el pago queda disponible en
+                    <strong>Pagos → Historial</strong> automáticamente.
+                </div>
 
                 <button class="exit-btn" onclick="registrarSalida()">
-                    Confirmar Salida
+                    Confirmar Salida y Pago
                 </button>
 
+            </div>
+
+            <!-- MODAL RECIBO -->
+            <div id="modalRecibo" class="recibo-overlay" style="display:none">
+                <div class="recibo-card">
+                    <div class="recibo-header">
+                        <div class="recibo-titulo">🚗 Autos Colombia</div>
+                        <div class="recibo-subtitulo">Sistema de Parqueo — Recibo de Pago</div>
+                    </div>
+                    <div class="recibo-num" id="reciboNumero"></div>
+                    <div class="recibo-body">
+                        <div class="recibo-check">✓</div>
+                        <div class="recibo-placa-wrap">
+                            <span class="recibo-placa" id="recPlaca"></span>
+                            <span class="recibo-sub" id="recTipoEspacio"></span>
+                        </div>
+                        <div class="recibo-filas" id="reciboFilas"></div>
+                        <div class="recibo-total" id="reciboTotal"></div>
+                    </div>
+                    <div class="recibo-footer">
+                        <button onclick="imprimirRecibo()">🖨 Imprimir</button>
+                        <button class="btn-cerrar-recibo" onclick="cerrarRecibo()">Cerrar</button>
+                    </div>
+                </div>
             </div>
 
         </main>
