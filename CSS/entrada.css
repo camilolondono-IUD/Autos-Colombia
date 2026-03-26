@@ -99,3 +99,13 @@ border-radius:8px;
 .tarifas ul{
 padding-left:20px;
 }
+
+.notif-mensual {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 500;
+}
