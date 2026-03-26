@@ -1,8 +1,9 @@
 // ─── CLAVES localStorage ──────────────────────────────────────────────────────
 
-const CELDAS_KEY    = 'celdas_db';
-const ENTRADAS_KEY  = 'registros_entrada';
-const RECIENTES_KEY = 'vehiculos_recientes';
+const CELDAS_KEY     = 'celdas_db';
+const ENTRADAS_KEY   = 'registros_entrada';
+const RECIENTES_KEY  = 'vehiculos_recientes';
+const PAGOS_MENS_KEY = 'pagos_db';
 
 const MINUTOS_RECIENTES = 5;
 
@@ -165,6 +166,8 @@ document.getElementById('formEntrada').addEventListener('submit', function (e) {
     guardarReciente(registro);
 
     alert(`Vehículo ${placa} registrado correctamente en el espacio ${espacio}.`);
+    document.getElementById('modalidad').disabled = false;
+    document.getElementById('notifMensual').style.display = 'none';
     document.getElementById('formEntrada').reset();
     setFechaHoraActual();
     actualizarCeldas();
@@ -200,10 +203,48 @@ function setFechaHoraActual() {
 }
 
 
+// ─── VERIFICACIÓN MENSUALIDAD EN ENTRADA ─────────────────────────────────────
+
+function verificarPlacaMensual() {
+    const placa   = document.getElementById('placa').value.trim().toUpperCase();
+    const notif   = document.getElementById('notifMensual');
+    const selMod  = document.getElementById('modalidad');
+
+    if (!placa) {
+        notif.style.display = 'none';
+        selMod.disabled     = false;
+        return;
+    }
+
+    const lista = JSON.parse(localStorage.getItem(PAGOS_MENS_KEY) || '[]');
+    const hoy   = fechaLocalISO(new Date());
+    const mens  = lista.find(m => m.placa === placa && m.fechaVencimiento >= hoy);
+
+    if (mens) {
+        selMod.value    = 'mensual';
+        selMod.disabled = true;
+        notif.textContent = `✓ La placa ${placa} tiene mensualidad activa — vence el ${mens.fechaVencimiento.split('-').reverse().join('/')}. Modalidad bloqueada en "Mensual".`;
+        notif.style.display = 'block';
+    } else {
+        selMod.disabled     = false;
+        notif.style.display = 'none';
+    }
+}
+
+
 // ─── INICIO ──────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', function () {
     inicializarCeldas();
     setFechaHoraActual();
     actualizarCeldas();
+
+    const placaInput = document.getElementById('placa');
+    placaInput.addEventListener('blur', verificarPlacaMensual);
+
+    // Limpiar notif y desbloquear modalidad al resetear el form
+    document.getElementById('formEntrada').addEventListener('reset', function () {
+        document.getElementById('notifMensual').style.display = 'none';
+        document.getElementById('modalidad').disabled = false;
+    });
 });

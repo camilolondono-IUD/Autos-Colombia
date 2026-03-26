@@ -6,6 +6,12 @@ const PAGOS_MENS_KEY   = 'pagos_db';          // exclusivo para mensualidades
 
 // ─── UTILIDADES ───────────────────────────────────────────────────────────────
 
+function horaLocalHHMM(d) {
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mi = String(d.getMinutes()).padStart(2, '0');
+    return `${hh}:${mi}`;
+}
+
 function fechaLocalISO(d) {
     const yy = d.getFullYear();
     const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -197,7 +203,7 @@ function mostrarRecibo(r) {
         </div>
     `).join('');
 
-    if (r.esMensual) {
+    if (r.esMensual && !r.esPagoMensualidad) {
         document.getElementById('reciboTotal').innerHTML =
             `<div class="total-mensual">Cliente con mensualidad activa — Sin cobro adicional</div>`;
     } else {
@@ -304,8 +310,10 @@ function renderizarMensualidades(lista) {
             <td>${formatearMostrar(m.fechaVencimiento, null)}</td>
             <td>${badgeMap[estado]}</td>
             <td>
-                <button class="btn-ver" onclick="verDetallesMensualidad('${m.id}')">Ver</button>
+                <button class="btn-ver"    onclick="verDetallesMensualidad('${m.id}')">Ver</button>
+                <button class="btn-editar" onclick="editarMensualidad('${m.id}')">Editar</button>
                 <button class="btn-renovar" onclick="renovarMensualidad('${m.id}')">Renovar</button>
+                <button class="btn-borrar" onclick="borrarMensualidad('${m.id}')">Borrar</button>
             </td>
         `;
         tbody.appendChild(tr);
@@ -313,12 +321,14 @@ function renderizarMensualidades(lista) {
 }
 
 
-// ─── MODAL NUEVA MENSUALIDAD ──────────────────────────────────────────────────
+// ─── MODAL NUEVA / EDITAR / RENOVAR MENSUALIDAD ──────────────────────────────
 
 let idMensEdicion = null;
+let modoModal     = 'nueva'; // 'nueva' | 'renovar' | 'editar'
 
 function abrirModalNuevaMensualidad() {
     idMensEdicion = null;
+    modoModal     = 'nueva';
     document.getElementById('modalMensTitulo').textContent = 'Nueva Mensualidad';
     document.getElementById('mensPlaca').value       = '';
     document.getElementById('mensPropietario').value = '';
@@ -331,6 +341,33 @@ function abrirModalNuevaMensualidad() {
 function cerrarModalMensualidad() {
     document.getElementById('modalMensualidad').style.display = 'none';
     idMensEdicion = null;
+    modoModal     = 'nueva';
+}
+
+function registrarPagoEnHistorial(placa, tipo, metodo, esRenovacion) {
+    const ahora = new Date();
+    const hoy   = fechaLocalISO(ahora);
+    const hora  = horaLocalHHMM(ahora);
+    const monto = tarifaMensual(tipo);
+    const salidas = JSON.parse(localStorage.getItem(SALIDAS_KEY) || '[]');
+    salidas.push({
+        id:                Date.now(),
+        placa,
+        tipo,
+        espacio:           'N/A',
+        modalidad:         'mensual',
+        fechaEntrada:      hoy,
+        horaEntrada:       hora,
+        fechaSalida:       hoy,
+        horaSalida:        hora,
+        tiempoMin:         0,
+        detalleCobro:      esRenovacion ? 'Renovación mensualidad — 30 días' : 'Pago mensualidad — 30 días',
+        totalCobrado:      monto,
+        metodoPago:        metodo,
+        esMensual:         true,
+        esPagoMensualidad: true
+    });
+    localStorage.setItem(SALIDAS_KEY, JSON.stringify(salidas));
 }
 
 function guardarMensualidad() {
@@ -346,11 +383,23 @@ function guardarMensualidad() {
 
     const lista = cargarMensualidadesDB();
 
-    if (idMensEdicion) {
-        // Renovar: extender 30 días desde hoy
+    if (modoModal === 'editar') {
+        // Solo actualiza datos — sin cambiar fechas ni registrar pago
         const index = lista.findIndex(m => m.id === idMensEdicion);
         if (index !== -1) {
-            const hoy          = fechaLocalISO(new Date());
+            lista[index].propietario = propietario;
+            lista[index].tipo        = tipo;
+            lista[index].metodoPago  = metodo;
+            lista[index].monto       = tarifaMensual(tipo);
+            guardarMensualidadesDB(lista);
+            alert(`Datos de mensualidad de ${placa} actualizados.`);
+        }
+
+    } else if (modoModal === 'renovar') {
+        // Extiende 30 días y registra pago en historial
+        const index = lista.findIndex(m => m.id === idMensEdicion);
+        if (index !== -1) {
+            const hoy            = fechaLocalISO(new Date());
             const baseRenovacion = lista[index].fechaVencimiento > hoy
                 ? lista[index].fechaVencimiento
                 : hoy;
@@ -358,9 +407,12 @@ function guardarMensualidad() {
             lista[index].metodoPago       = metodo;
             lista[index].propietario      = propietario;
             lista[index].tipo             = tipo;
+            lista[index].monto            = tarifaMensual(tipo);
             guardarMensualidadesDB(lista);
+            registrarPagoEnHistorial(placa, tipo, metodo, true);
             alert(`Mensualidad de ${placa} renovada hasta ${formatearMostrar(lista[index].fechaVencimiento, null)}.`);
         }
+
     } else {
         // Nueva mensualidad
         const duplicado = lista.find(m => m.placa === placa && estadoMensualidad(m.fechaVencimiento) !== 'vencida');
@@ -368,7 +420,6 @@ function guardarMensualidad() {
             alert(`Ya existe una mensualidad activa o próxima para la placa ${placa}.`);
             return;
         }
-
         const hoy = fechaLocalISO(new Date());
         const nueva = {
             id:               String(Date.now()),
@@ -382,10 +433,37 @@ function guardarMensualidad() {
         };
         lista.push(nueva);
         guardarMensualidadesDB(lista);
+        registrarPagoEnHistorial(placa, tipo, metodo, false);
         alert(`Mensualidad registrada para ${placa}. Vence el ${formatearMostrar(nueva.fechaVencimiento, null)}.`);
     }
 
     cerrarModalMensualidad();
+    cargarMensualidades();
+}
+
+function editarMensualidad(id) {
+    const lista = cargarMensualidadesDB();
+    const m = lista.find(x => x.id === id);
+    if (!m) return;
+
+    idMensEdicion = id;
+    modoModal     = 'editar';
+    document.getElementById('modalMensTitulo').textContent = 'Editar Mensualidad';
+    document.getElementById('mensPlaca').value       = m.placa;
+    document.getElementById('mensPropietario').value = m.propietario || '';
+    document.getElementById('mensTipo').value        = m.tipo;
+    document.getElementById('mensMetodo').value      = m.metodoPago || 'Efectivo';
+    document.getElementById('mensPlaca').disabled    = true;
+    document.getElementById('modalMensualidad').style.display = 'flex';
+}
+
+function borrarMensualidad(id) {
+    const lista = cargarMensualidadesDB();
+    const m = lista.find(x => x.id === id);
+    if (!m) return;
+    if (!confirm(`¿Eliminar la mensualidad de la placa ${m.placa}? Esta acción no se puede deshacer.`)) return;
+    const nueva = lista.filter(x => x.id !== id);
+    guardarMensualidadesDB(nueva);
     cargarMensualidades();
 }
 
@@ -395,6 +473,7 @@ function renovarMensualidad(id) {
     if (!m) return;
 
     idMensEdicion = id;
+    modoModal     = 'renovar';
     document.getElementById('modalMensTitulo').textContent = 'Renovar Mensualidad';
     document.getElementById('mensPlaca').value       = m.placa;
     document.getElementById('mensPropietario').value = m.propietario || '';

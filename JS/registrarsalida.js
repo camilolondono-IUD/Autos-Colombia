@@ -1,8 +1,9 @@
 // ─── CLAVES localStorage ──────────────────────────────────────────────────────
 
-const CELDAS_KEY   = 'celdas_db';
-const ENTRADAS_KEY = 'registros_entrada';
-const SALIDAS_KEY  = 'registros_salida';
+const CELDAS_KEY     = 'celdas_db';
+const ENTRADAS_KEY   = 'registros_entrada';
+const SALIDAS_KEY    = 'registros_salida';
+const PAGOS_MENS_KEY = 'pagos_db';
 
 
 // ─── TARIFAS ──────────────────────────────────────────────────────────────────
@@ -60,6 +61,15 @@ function formatearTiempo(minutos) {
 }
 
 
+// ─── VALIDACIÓN MENSUALIDAD ACTIVA ────────────────────────────────────────────
+
+function tieneMensualidadActiva(placa) {
+    const lista = JSON.parse(localStorage.getItem(PAGOS_MENS_KEY) || '[]');
+    const hoy   = fechaLocalISO(new Date());
+    return lista.some(m => m.placa === placa.toUpperCase() && m.fechaVencimiento >= hoy);
+}
+
+
 // ─── CÁLCULO DE COBRO ─────────────────────────────────────────────────────────
 
 function calcularCobro(registro) {
@@ -81,7 +91,7 @@ function calcularCobro(registro) {
     let detalle   = '';
     let esMensual = false;
 
-    if (modalidad === 'mensual') {
+    if (modalidad === 'mensual' && tieneMensualidadActiva(registro.placa)) {
         esMensual = true;
         total     = 0;
         detalle   = 'Cliente con mensualidad activa.';
@@ -144,9 +154,14 @@ function buscarVehiculo() {
     document.getElementById('vplaca').textContent     = registro.placa;
     document.getElementById('vtipo').textContent      = registro.tipo;
     document.getElementById('vespacio').textContent   = registro.espacio;
-    document.getElementById('vmodalidad').textContent =
-        registro.modalidad === 'hora' ? 'Por hora' :
-        registro.modalidad === 'dia'  ? 'Por día'  : 'Mensual';
+    const modalidadLabel = registro.modalidad === 'hora' ? 'Por hora' :
+                           registro.modalidad === 'dia'  ? 'Por día'  : 'Mensual';
+    const vmodalidadEl = document.getElementById('vmodalidad');
+    if (registro.modalidad === 'mensual' && !tieneMensualidadActiva(registro.placa)) {
+        vmodalidadEl.innerHTML = `Mensual <span style="color:#dc2626;font-size:11px;font-weight:bold">(VENCIDA — se cobra por tiempo)</span>`;
+    } else {
+        vmodalidadEl.textContent = modalidadLabel;
+    }
 
     document.getElementById('ventrada').textContent =
         formatearMostrar(registro.fecha, registro.hora);
