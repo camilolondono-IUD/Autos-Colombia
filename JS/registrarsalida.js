@@ -5,7 +5,7 @@ const ENTRADAS_KEY = 'registros_entrada';
 const SALIDAS_KEY  = 'registros_salida';
 
 
-// ─── TARIFAS ─────────────────────────────────────────────────────────────────
+// ─── TARIFAS ──────────────────────────────────────────────────────────────────
 
 const TARIFAS = {
     'Carro':     { hora: 3000,  dia: 25000 },
@@ -19,8 +19,7 @@ function getTarifa(tipo) {
 }
 
 
-// ─── UTILIDADES DE FECHA Y HORA LOCAL ────────────────────────────────────────
-// fecha: "YYYY-MM-DD", hora: "HH:MM" (24h) — ambos en hora local
+// ─── UTILIDADES DE FECHA Y HORA LOCAL ─────────────────────────────────────────
 
 function fechaLocalISO(d) {
     const yy = d.getFullYear();
@@ -61,14 +60,12 @@ function formatearTiempo(minutos) {
 }
 
 
-// ─── CÁLCULO DE COBRO ────────────────────────────────────────────────────────
+// ─── CÁLCULO DE COBRO ─────────────────────────────────────────────────────────
 
 function calcularCobro(registro) {
     const tarifa    = getTarifa(registro.tipo);
     const modalidad = registro.modalidad;
 
-    // Construir Date desde fecha+hora LOCAL del formulario
-    // "YYYY-MM-DDThh:mm:00" sin Z = hora local del navegador
     const fechaHoraEntrada = new Date(`${registro.fecha}T${registro.hora}:00`);
     const fechaHoraSalida  = new Date();
 
@@ -109,7 +106,18 @@ function calcularCobro(registro) {
 }
 
 
-// ─── BUSCAR VEHÍCULO ─────────────────────────────────────────────────────────
+// ─── MÉTODO DE PAGO SELECCIONADO ──────────────────────────────────────────────
+
+let metodoPagoActivo = 'Efectivo';
+
+function seleccionarMetodo(btn) {
+    document.querySelectorAll('.btn-metodo').forEach(b => b.classList.remove('activo'));
+    btn.classList.add('activo');
+    metodoPagoActivo = btn.dataset.metodo;
+}
+
+
+// ─── BUSCAR VEHÍCULO ──────────────────────────────────────────────────────────
 
 function buscarVehiculo() {
     const placa = document.getElementById('placa').value.trim().toUpperCase();
@@ -130,10 +138,9 @@ function buscarVehiculo() {
 
     document.getElementById('noEncontrado').style.display = 'none';
 
-    const cobro   = calcularCobro(registro);
-    const ahoraD  = cobro.fechaHoraSalida;
+    const cobro  = calcularCobro(registro);
+    const ahoraD = cobro.fechaHoraSalida;
 
-    // Poblar campos — todo en formato dd/mm/yyyy H:MMam/pm
     document.getElementById('vplaca').textContent     = registro.placa;
     document.getElementById('vtipo').textContent      = registro.tipo;
     document.getElementById('vespacio').textContent   = registro.espacio;
@@ -162,12 +169,18 @@ function buscarVehiculo() {
         document.getElementById('vpago').textContent = formatearPesos(cobro.total);
     }
 
+    // Resetear método de pago al mostrar un nuevo vehículo
+    metodoPagoActivo = 'Efectivo';
+    document.querySelectorAll('.btn-metodo').forEach(b => b.classList.remove('activo'));
+    const btnEfectivo = document.querySelector('.btn-metodo[data-metodo="Efectivo"]');
+    if (btnEfectivo) btnEfectivo.classList.add('activo');
+
     document.getElementById('info').style.display       = 'block';
     document.getElementById('info').dataset.placaActiva = placa;
 }
 
 
-// ─── REGISTRAR SALIDA ────────────────────────────────────────────────────────
+// ─── REGISTRAR SALIDA ─────────────────────────────────────────────────────────
 
 function registrarSalida() {
     const placa = document.getElementById('info').dataset.placaActiva;
@@ -181,14 +194,25 @@ function registrarSalida() {
     const cobro    = calcularCobro(registro);
     const ahora    = new Date();
 
+    // Si no es mensual y no se seleccionó método, avisar
+    if (!cobro.esMensual && !metodoPagoActivo) {
+        alert('Por favor seleccione un método de pago.');
+        return;
+    }
+
+    const metodo = cobro.esMensual ? 'Sin cobro' : metodoPagoActivo;
+
+    // ── 1. Marcar entrada como inactiva ──────────────────────────────────────
     entradas[index].estado       = 'inactivo';
     entradas[index].fechaSalida  = fechaLocalISO(ahora);
     entradas[index].horaSalida   = horaLocalHHMM(ahora);
     entradas[index].totalCobrado = cobro.total;
+    entradas[index].metodoPago   = metodo;
     localStorage.setItem(ENTRADAS_KEY, JSON.stringify(entradas));
 
+    // ── 2. Guardar en registros_salida (fuente del módulo Pagos) ─────────────
     const salidas = JSON.parse(localStorage.getItem(SALIDAS_KEY) || '[]');
-    salidas.push({
+    const nuevaSalida = {
         id:           Date.now(),
         placa:        registro.placa,
         tipo:         registro.tipo,
@@ -200,10 +224,14 @@ function registrarSalida() {
         horaSalida:   horaLocalHHMM(ahora),
         tiempoMin:    cobro.diffMinutos,
         detalleCobro: cobro.detalle,
-        totalCobrado: cobro.total
-    });
+        totalCobrado: cobro.total,
+        metodoPago:   metodo,
+        esMensual:    cobro.esMensual
+    };
+    salidas.push(nuevaSalida);
     localStorage.setItem(SALIDAS_KEY, JSON.stringify(salidas));
 
+    // ── 3. Liberar celda ──────────────────────────────────────────────────────
     const celdas = JSON.parse(localStorage.getItem(CELDAS_KEY) || '[]');
     const ci     = celdas.findIndex(c => c.numero === registro.espacio);
     if (ci !== -1) {
@@ -212,12 +240,10 @@ function registrarSalida() {
         localStorage.setItem(CELDAS_KEY, JSON.stringify(celdas));
     }
 
-    const msg = cobro.esMensual
-        ? 'Salida registrada. Cliente con mensualidad — sin cobro adicional.'
-        : `Salida registrada. Total cobrado: ${formatearPesos(cobro.total)}`;
+    // ── 4. Mostrar recibo ─────────────────────────────────────────────────────
+    mostrarRecibo(nuevaSalida, registro);
 
-    alert(msg);
-
+    // ── 5. Limpiar formulario ─────────────────────────────────────────────────
     document.getElementById('info').style.display        = 'none';
     document.getElementById('placeholder').style.display = 'block';
     document.getElementById('placa').value               = '';
@@ -225,7 +251,51 @@ function registrarSalida() {
 }
 
 
-// ─── ENTER EN BUSCADOR ───────────────────────────────────────────────────────
+// ─── MODAL RECIBO ─────────────────────────────────────────────────────────────
+
+function mostrarRecibo(salida, entradaOriginal) {
+    const numRecibo = `#SAL-${String(salida.id).slice(-6)}`;
+    document.getElementById('reciboNumero').textContent = `RECIBO  ${numRecibo}`;
+    document.getElementById('recPlaca').textContent     = salida.placa;
+    document.getElementById('recTipoEspacio').textContent =
+        `${salida.tipo}   ·   Espacio ${salida.espacio}`;
+
+    const filas = [
+        ['Fecha de entrada', formatearMostrar(salida.fechaEntrada, salida.horaEntrada)],
+        ['Fecha de salida',  formatearMostrar(salida.fechaSalida,  salida.horaSalida)],
+        ['Tiempo total',     formatearTiempo(salida.tiempoMin)],
+        ['Detalle cobro',    salida.detalleCobro],
+        ['Método de pago',   salida.metodoPago],
+    ];
+
+    document.getElementById('reciboFilas').innerHTML = filas.map(([lbl, val]) => `
+        <div class="recibo-fila">
+            <span class="rec-label">${lbl}</span>
+            <span class="rec-val">${val}</span>
+        </div>
+    `).join('');
+
+    if (salida.esMensual) {
+        document.getElementById('reciboTotal').innerHTML =
+            `<div class="total-mensual">Cliente con mensualidad activa — Sin cobro adicional</div>`;
+    } else {
+        document.getElementById('reciboTotal').innerHTML =
+            `<div class="total-row"><span>Total cobrado</span><span>${formatearPesos(salida.totalCobrado)}</span></div>`;
+    }
+
+    document.getElementById('modalRecibo').style.display = 'flex';
+}
+
+function cerrarRecibo() {
+    document.getElementById('modalRecibo').style.display = 'none';
+}
+
+function imprimirRecibo() {
+    window.print();
+}
+
+
+// ─── ENTER EN BUSCADOR ────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('placa').addEventListener('keydown', function (e) {
