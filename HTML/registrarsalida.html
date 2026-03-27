@@ -170,32 +170,32 @@
 
             </div>
 
-            <!-- MODAL RECIBO -->
-            <div id="modalRecibo" class="recibo-overlay" style="display:none">
-                <div class="recibo-card">
-                    <div class="recibo-header">
-                        <div class="recibo-titulo">🚗 Autos Colombia</div>
-                        <div class="recibo-subtitulo">Sistema de Parqueo — Recibo de Pago</div>
-                    </div>
-                    <div class="recibo-num" id="reciboNumero"></div>
-                    <div class="recibo-body">
-                        <div class="recibo-check">✓</div>
-                        <div class="recibo-placa-wrap">
-                            <span class="recibo-placa" id="recPlaca"></span>
-                            <span class="recibo-sub" id="recTipoEspacio"></span>
-                        </div>
-                        <div class="recibo-filas" id="reciboFilas"></div>
-                        <div class="recibo-total" id="reciboTotal"></div>
-                    </div>
-                    <div class="recibo-footer">
-                        <button onclick="window.print()">🖨 Imprimir</button>
-                        <button class="btn-cerrar-recibo" onclick="cerrarRecibo()">Cerrar</button>
-                    </div>
-                </div>
-            </div>
-
         </main>
 
+    </div>
+
+    <!-- MODAL RECIBO —-->
+    <div id="modalRecibo" class="recibo-overlay" style="display:none">
+        <div class="recibo-card">
+            <div class="recibo-header">
+                <div class="recibo-titulo">🚗 Autos Colombia</div>
+                <div class="recibo-subtitulo">Sistema de Parqueo — Recibo de Pago</div>
+            </div>
+            <div class="recibo-num" id="reciboNumero"></div>
+            <div class="recibo-body">
+                <div class="recibo-check">✓</div>
+                <div class="recibo-placa-wrap">
+                    <span class="recibo-placa" id="recPlaca"></span>
+                    <span class="recibo-sub" id="recTipoEspacio"></span>
+                </div>
+                <div class="recibo-filas" id="reciboFilas"></div>
+                <div class="recibo-total" id="reciboTotal"></div>
+            </div>
+            <div class="recibo-footer">
+                <button onclick="window.print()">🖨 Imprimir</button>
+                <button class="btn-cerrar-recibo" onclick="cerrarRecibo()">Cerrar</button>
+            </div>
+        </div>
     </div>
 
     <script src="../JS/sidebar.js"></script>
