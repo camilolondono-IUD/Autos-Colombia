@@ -454,7 +454,7 @@ h1 {
 /* ── PRINT: solo muestra el recibo ───────────────────────────────────────── */
 
 @media print {
-    .sidebar, .search-box, .result, .vehicle-card, .container > * {
+    .container {
         display: none !important;
     }
     .recibo-overlay {
